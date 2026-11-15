@@ -1,18 +1,16 @@
 # Simple Banner - WordPress Bootstrap 5 Carousel Plugin
 
-A powerful and user-friendly WordPress plugin for creating beautiful Bootstrap 5 carousel banners with multiple instances, image management, and customizable controls.
-
 ## Features
 
-✅ **Multiple Banner Instances** - Create unlimited banner carousels, each with its own unique shortcode  
+✅ **Multiple Banner Instances** - Create unlimited banner carousels, each with its own unique shortcode (and safe multiple-use on the same page)  
 ✅ **Image Upload** - Easy image upload using WordPress media library  
 ✅ **Image URL Links** - Add clickable links to each banner image  
-✅ **Left/Right Controls** - Navigation arrows with customizable colors  
+✅ **Custom SVG Controls** - Thick, animated SVG navigation arrows with customizable colors  
 ✅ **Pagination Dots** - Swiper-style indicator dots with customizable colors  
 ✅ **Image Management** - Delete and deactivate images without removing them permanently  
 ✅ **Drag & Drop Sorting** - Easily reorder images by dragging  
-✅ **Bootstrap 5** - Built with the latest Bootstrap framework  
-✅ **Responsive Design** - Mobile-friendly and touch-enabled  
+✅ **Bootstrap 5.3.3** - Built with Bootstrap 5.3.3, conditional asset loading, and `defer` script strategy  
+✅ **Performance & Accessibility** - Uses Media Library alt text, `decoding="async"`, eager/lazy slide loading, and keyboard/touch navigation  
 ✅ **Autoplay Options** - Configure automatic slide transitions  
 
 ## Installation
@@ -139,12 +137,17 @@ simple-banner/
 
 ### Bootstrap 5 Integration
 
-The plugin uses Bootstrap 5's carousel component, providing:
-- Smooth transitions
-- Touch/swipe support on mobile devices
-- Keyboard navigation (arrow keys)
-- Responsive design
-- Accessibility features
+The plugin uses Bootstrap 5.3.3's carousel component, providing:
+- Smooth transitions with custom inline SVG arrow controls
+- Conditional asset loading (only enqueued when a banner is rendered) with WordPress 6.3+ `defer` script loading
+- Passive touch/swipe support on mobile devices
+- Keyboard navigation (Left/Right arrow keys)
+- Responsive design and accessibility features (Media Library alt text, `aria-label`, `aria-current`)
+
+### Developer Filters
+
+- `simple_banner_always_enqueue_assets` — Return `true` to enqueue Bootstrap and banner assets on all frontend pages even when `[simple_banner]` is not detected in post content.
+- `simple_banner_html` — Filter the rendered carousel HTML (`apply_filters('simple_banner_html', $html, $banner_id)`).
 
 ### Image Management System
 
@@ -186,13 +189,17 @@ A: Yes! Use the shortcode block in Gutenberg, or shortcode widget in page builde
 ## Changelog
 
 ### Version 1.1.0
-- Updated WordPress compatibility headers (`Requires at least: 6.0`, `Tested up to: 6.8`, `Requires PHP: 7.4`)
+- Updated WordPress compatibility headers (`Requires at least: 6.0`, `Tested up to: 6.8`, `Requires PHP: 7.4`) and added `Domain Path: /languages`
 - Updated textdomain loading to run on `init` for WordPress 6.7+ compatibility
 - Updated Bootstrap 5 CDN to 5.3.3 with WordPress 6.3+ `defer` script loading strategy
-- Added conditional frontend asset loading (only enqueues Bootstrap and banner assets when a banner is rendered)
+- Added conditional frontend asset loading (enqueues Bootstrap and banner assets when `[simple_banner]` is present or rendered, overridable via `simple_banner_always_enqueue_assets` filter)
 - Added unique carousel IDs via `wp_unique_id()` to support multiple instances of the same banner on one page
-- Added Media Library alt text support, `decoding="async"`, and lazy loading for secondary slides
-- Hardened PHP 8.x compatibility, nonce/input unslashing, and clipboard copy fallback
+- Replaced CSS-inverted Bootstrap arrow icons with custom inline SVG chevron controls (`.sb-arrow-icon`) with direct color styling and hover transitions
+- Added Media Library alt text support, `decoding="async"`, `loading="eager"` on the first slide, and `loading="lazy"` on secondary slides
+- Added `simple_banner_html` filter on shortcode output and verified banner `publish` status and non-empty image URLs before rendering
+- Scoped admin media uploader and jQuery UI Sortable enqueues to `post.php` / `post-new.php` screens, localized admin JS strings, and removed unused AJAX handlers
+- Improved frontend JS with `SimpleBanner.getCarouselInstance()`, duplicate-init guard, passive touch listeners, and `e.key` keyboard navigation
+- Hardened PHP 8.x compatibility, revision checks, nonce/input unslashing, output escaping, and clipboard copy fallback for non-HTTPS environments
 
 ### Version 1.0.0
 - Initial release
@@ -224,4 +231,3 @@ This plugin is licensed under the GPL v2 or later.
 ---
 
 **Developed with ❤️ for WordPress**
-
